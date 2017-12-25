@@ -202,14 +202,14 @@ So that's all
 
 ... no just joking. Four months without commits wouldn't have been passed if there isn't more. Up till here, there was no covert channel communication, right?!
 
-### 4. Fire stage 1 of the covert channel payload ('FireStage1' command)
+### 4. Fire stage 1 of the covert channel payload ('FireStage' command)
 - As we are able to print characters to the target, we are able to remotly execute code. P4wnP1 uses this capability to type out a PowerShell script, which builds and executes the covert channel communication stack. This attack works in multiple steps:
-    1. Keystrokes are injected to start a PowerShell session and type out stage 1 of the payload. Depending on how the command `FireStage1` is used, this happens in different flavours. By default a short stub is executed, which hides the command windows from the user, followed by the stage 1 main script.
+    1. Keystrokes are injected to start a PowerShell session and type out stage 1 of the payload. Depending on how the command `FireStage` is used, this happens in different flavours. By default a short stub is executed, which hides the command windows from the user, followed by the stage 1 main script.
 	2. The stage 1 main script comes in two fashions:
        - Type 1: A pure PowerShell script which is short and thus fast, but uses the infamous IEX command (this command has the capability to make threat hunters and blue teamers happy). This is the default stage 1 payload.
        - Type 2: A dot NET assembly, which is loaded and executed via PowerShell. This stage 1 payload takes longer to execute, as more characters are needed. But, as you may already know, it doesn't use the IEX command.
-- It is worth mentioning, that the PowerShell session is started without command line arguments, so there's nothing which triggers detection mechanisms for malicious command lines. Theres no parameter like `-exec bypass`, `-enc`, `-NoProfile` or `hidden` ... nothing suspicious! The shortcoming is, that we need to wait till the PowerShell window opens before typing is continued. As we are not able to detect for input readiness and there are boxes which take years to bring up an interactive PowerShell window, the delay between running `powershell.exe` and starting of stage1 typeout could be changed with the second parameter to the `FireStage1` command (default is 1000 milliseconds).
-- Last but not least, if you append `nohide` to the end of the `FireStage1` command line, the Window hiding stub isn't executed in upfront and you should be able to see all my sh**ty debug output.
+- It is worth mentioning, that the PowerShell session is started without command line arguments, so there's nothing which triggers detection mechanisms for malicious command lines. Theres no parameter like `-exec bypass`, `-enc`, `-NoProfile` or `hidden` ... nothing suspicious! The shortcoming is, that we need to wait till the PowerShell window opens before typing is continued. As we are not able to detect for input readiness and there are boxes which take years to bring up an interactive PowerShell window, the delay between running `powershell.exe` and starting of stage1 typeout could be changed with the second parameter to the `FireStage` command (default is 1000 milliseconds).
+- Last but not least, if you append `nohide` to the end of the `FireStage` command line, the Window hiding stub isn't executed in upfront and you should be able to see all my sh**ty debug output.
 
 ### 5. Loading stage 2
 - There's no rocket sience here. The stage 1 payload initializes the basic interface to the custom HID device and receives stage 2 **fully automated**. Stage 2 includes all the protocol layers and the final backdoor. It gets directly loaded into memory as dot NET assembly.
@@ -233,7 +233,7 @@ So that's all
 3. Connect to the newly spawned `P4wnP1` WiFi with a different device (could be a smartphone, as long as a SSH client is installed)
 4. Set the correct target keyboard layout with `SetKeyboardLayout` (or alter `hidtools/backdoor/config.txt`)
 5. On the P4wnP1 shell run `SendKeys` or `FireDuckyScript` to inject key strokes
-6. To fire up the covert channel HID backdoor, issue the command `FireStage1`
+6. To fire up the covert channel HID backdoor, issue the command `FireStage`
 7. After the target connected back, enter `shell` to create a remote shell through the covert channel
 
 ## HID backdoor - Currently missing features

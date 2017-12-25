@@ -57,12 +57,12 @@ So the more precise question should be: "What's the difference between this and 
 
 ### What's the difference between this and an ordinary RubberDucky attack?
 The backdoor payload does the same as a RubberDucky attack. The difference is that you can launch keyboard attacks from a WiFi based custom SSH shell on demand. The target sees only two HID devices, no other USB hardware.
-From the moment you use the `FireStage1` command things change a bit:
-As stated there are two HID devices. The first one is a HID keyboard (used to carry out the keyboard attacks). The second HID device is a GENERIC HID device. The `FireStage1` command uses the keyboard device, to type out code building up a sort of protocol stack. This protocol stack is used to communicate with P4wnP1 via the second HID device. 
+From the moment you use the `FireStage` command things change a bit:
+As stated there are two HID devices. The first one is a HID keyboard (used to carry out the keyboard attacks). The second HID device is a GENERIC HID device. The `FireStage` command uses the keyboard device, to type out code building up a sort of protocol stack. This protocol stack is used to communicate with P4wnP1 via the second HID device. 
 
 To be more precise:
 The shell that spawns using the `shell` command doesn't use a network connection, a serial port or any other communication device. It is based on a pure Human Interface Device. Now try to explain to your firewall to block this communication channel (this isn't socket based). Or try to explain to your endpoint protection to block USB HID devices and say goodbye to all kinds of controllers using this standard. I guess the difference becomes clear!
-So to carry out pure keyboard attacks, this kind of "covert channel" isn't needed, you can run them as soon as you SSH into P4wnP1s backdoor interface. But once the covert channel is up after issuing `FireStage1` there should be no need to run further keyboard attacks, as long as you know what you're doing. The input to the shell (and other spawned processes) is tunnelled through the HID channel.
+So to carry out pure keyboard attacks, this kind of "covert channel" isn't needed, you can run them as soon as you SSH into P4wnP1s backdoor interface. But once the covert channel is up after issuing `FireStage` there should be no need to run further keyboard attacks, as long as you know what you're doing. The input to the shell (and other spawned processes) is tunnelled through the HID channel.
 
 ### Where is the code for the client side payload?
 Here: https://github.com/mame82/P4wnP1_HID_backdoor_client
