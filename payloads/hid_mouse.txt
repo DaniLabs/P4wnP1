@@ -32,7 +32,7 @@
 #   Test 2: relative positioning (with steps)
 #   Test 3: absolute positioning
 #
-# For details on P4wnP1's MouseScript languages, see the test script in $wdir/MouseScripts/test.mouse
+# For details on P4wnP1's MouseScript languages, see the test script in $wdir/mousescripts/test.mouse
 #
 # The HID backdoor supports P4wnP1's MouseScript with the 'SendMouseScript' command
 USB_VID="0x1d6b"        # Vendor ID
@@ -62,11 +62,11 @@ EOF
 			echo
 			echo "As soon as NUMLOCK is pressed multiple times, P4wnP1"
 			echo "tries to open MSPaint with the following DuckyScript:"
-			echo "  $wdir/DuckyScripts/mspaint.duck"
+			echo "  $wdir/duckyscripts/mspaint.duck"
 			echo
 			echo "This is followed by a script in P4wnP1's MouseScript language"
 			echo "which could be found here:"
-			echo "  $wdir/MouseScripts/test.mouse"
+			echo "  $wdir/mousescripts/test.mouse"
 			echo 
 			echo "The MouseScript file gives details on how to use MouseScript"
 			echo "and hints on advantages/disadvantages of the different ways"
@@ -79,11 +79,11 @@ EOF
 		key_trigger
 	
 		# use DuckyScript to open paint
-		cat $wdir/DuckyScripts/mspaint.duck | duckhid
+		cat $wdir/duckyscripts/mspaint.duck | duckhid
 		# use MouseScript to run 3 tests (painting the a house in three different modes)
 		# Note: the mouse script starts with a 5 second delay to allow manual interaction
 		#       like switching windows
-		cat $wdir/MouseScripts/test.mouse | outmouse
+		cat $wdir/mousescripts/test.mouse | outmouse
 	
 	done
 }

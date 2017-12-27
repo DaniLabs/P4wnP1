@@ -25,7 +25,7 @@ Today advanced features are merged back into the master branch, among others:
 -   the **Windows LockPicker** (unlock Windows boxes with weak passwords, fully automated by attaching P4wnP1)
 -   the **HID covert channel backdoor** (Get remote shell access on air gapped Windows targets tunneled only through HID devices, relayed to a WiFi hotspot with SSH access with a Pi Zero W. The target doesn't see a network adapter, serial or any other communication device.)
 -   the **HID covert channel frontdoor** (Get access to a python shell on P4wnP1 from a restricted Windows host, tunneled through a raw HID device with low footprint. The target doesn't see a network adapter, serial or any other communication device.)
--	refined USB, **modular USB setup**
+- refined USB, **modular USB setup**
 
 External Resources using P4wnP1
 ==================
@@ -43,16 +43,16 @@ External Resources using P4wnP1
 P4wnP1 Features (quick summary)
 ===============================
 
--	**WiFi Hotspot** for SSH access (Pi Zero W only), support for hidden ESSID
--	**operate WiFi in client mode** (Pi Zero W only), to relay USB network attacks through WiFi with internet access (MitM)
+- **WiFi Hotspot** for SSH access (Pi Zero W only), support for hidden ESSID
+- **operate WiFi in client mode** (Pi Zero W only), to relay USB network attacks through WiFi with internet access (MitM)
 -   the USB device features work in **every possible combination** with Windows **Plug and Play** support (class drivers)
 -   Support for device types
-	- **HID covert channel communication device** (see sections 'HID covert channel frontdoor' and 'HID covert channel backdoor')
+  - **HID covert channel communication device** (see sections 'HID covert channel frontdoor' and 'HID covert channel backdoor')
     - **HID Keyboard**
     - **USB Mass storage** (currently only in demo setup with 128 Megabyte drive)
     - **RNDIS** (Windows Networking)
     - **CDC ECM** (MacOS / Linux Networking)
--	Raspberry Pi **LED state feedback** with a simple bash command (`led_blink`)
+- Raspberry Pi **LED state feedback** with a simple bash command (`led_blink`)
 -   customizable **bash based payload scripts** (see `payloads/` subfolder for examples)
 -   includes **Responder** and a precompiled **John the Ripper Jumbo** version
 -   **Auto attack:** P4wnP1 automatically boots to standard shell if an OTG adapter is attached, the current payload only runs if P4wnP1 is connected as USB device to a target (without USB OTG adapter)
@@ -166,14 +166,14 @@ The video is produced by @Seytonic, you should check out his youtube channel wit
 - Pure **in memory, multi stage payload** - nothing is written to disk, small footprint (compared to typical PowerShell IOCs)
 - RAT like control server with custom shell:
     - Auto completition for core commands
-	- Send keystrokes on demand
-	- Excute DuckyScripts (menu driven)
-	- Trigger remote backdoor to bring up HID covert channel
-	- creation of **multiple** remote processes (only with covert channel connection)
-	- console interaction with managed remote processes (only with covert channel connection)
-	- auto kill of remote payload on disconnect
-	- `shell` command to  create remote shell (only with covert channel connection)
-	- server could be accessed with SSH via WiFi when the `hid_backdoor.txt` payload is running
+  - Send keystrokes on demand
+  - Excute DuckyScripts (menu driven)
+  - Trigger remote backdoor to bring up HID covert channel
+  - creation of **multiple** remote processes (only with covert channel connection)
+  - console interaction with managed remote processes (only with covert channel connection)
+  - auto kill of remote payload on disconnect
+  - `shell` command to  create remote shell (only with covert channel connection)
+  - server could be accessed with SSH via WiFi when the `hid_backdoor.txt` payload is running
 
 ## HID backdoor attack chain and usage
 
@@ -205,7 +205,7 @@ So that's all
 ### 4. Fire stage 1 of the covert channel payload ('FireStage' command)
 - As we are able to print characters to the target, we are able to remotly execute code. P4wnP1 uses this capability to type out a PowerShell script, which builds and executes the covert channel communication stack. This attack works in multiple steps:
     1. Keystrokes are injected to start a PowerShell session and type out stage 1 of the payload. Depending on how the command `FireStage` is used, this happens in different flavours. By default a short stub is executed, which hides the command windows from the user, followed by the stage 1 main script.
-	2. The stage 1 main script comes in two fashions:
+  2. The stage 1 main script comes in two fashions:
        - Type 1: A pure PowerShell script which is short and thus fast, but uses the infamous IEX command (this command has the capability to make threat hunters and blue teamers happy). This is the default stage 1 payload.
        - Type 2: A dot NET assembly, which is loaded and executed via PowerShell. This stage 1 payload takes longer to execute, as more characters are needed. But, as you may already know, it doesn't use the IEX command.
 - It is worth mentioning, that the PowerShell session is started without command line arguments, so there's nothing which triggers detection mechanisms for malicious command lines. Theres no parameter like `-exec bypass`, `-enc`, `-NoProfile` or `hidden` ... nothing suspicious! The shortcoming is, that we need to wait till the PowerShell window opens before typing is continued. As we are not able to detect for input readiness and there are boxes which take years to bring up an interactive PowerShell window, the delay between running `powershell.exe` and starting of stage1 typeout could be changed with the second parameter to the `FireStage` command (default is 1000 milliseconds).
@@ -220,10 +220,10 @@ So that's all
 - After stage 2 has successfully ran, the prompt of the P4wnP1 backdoor shell should indicate a client connection.
 - From here on, new commands are usable, these include:
     - `CreateProcess`
-	- `interact`
-	- `KillProcess`
-	- `KillClient`
-	- and ... :-) ... `shell`
+  - `interact`
+  - `KillProcess`
+  - `KillClient`
+  - and ... :-) ... `shell`
 - I'm too tired to explain these here, but I guess you'll find it out.
 
 ## HID backdoor attack - summary
@@ -273,49 +273,17 @@ Advanced payload features
 
 -   bash **payloads based on callbacks** (see [`template.txt`](payloads/template.txt) payload for details)
     - **onNetworkUp** (when target host gets network link active)
-	- **onTargetGotIP** (if the target received an IP, the IP could be accessed from the payload script)
-	- **onKeyboardUp** (when keyboard driver installation on target has finished and keyboard is usable)
-	- **onLogin** (when a user logs in to P4wnP1 via SSH)
+  - **onTargetGotIP** (if the target received an IP, the IP could be accessed from the payload script)
+  - **onKeyboardUp** (when keyboard driver installation on target has finished and keyboard is usable)
+  - **onLogin** (when a user logs in to P4wnP1 via SSH)
 - configuration can be done globally (`setup.cfg`) or overwritten per payload (if the same parameter is defined in the payload script)
 - settings include:
     - USB config (Vendor ID, Product ID, **device types to enable** ...)
     - WiFi config (SSID, password ...)
-	- HID keyboard config (**target keyboard language** etc.)
-	- Network and DHCP config
-	- **Payload Selection**
+  - HID keyboard config (**target keyboard language** etc.)
+  - Network and DHCP config
+  - **Payload Selection**
 
-
-Feature Comparison with BashBunny
-=================================
-
-Some days after initial P4wnP1 commit, Hak5's BashBunny was announced (and ordered by myself). Here's a little feature comparison:
-
-| Feature                                                                         | BashBunny                                                                                               | P4wnP1                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-|---------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| RNDIS, CDC ECM, HID , serial and Mass storage support                           | supported, usable in several combinations, Windows Class driver support (Plug and Play) in most modes   | supported, usable in most combinations, Windows Class driver support (Plug and Play) in all modes as composite device                                                                                                                                                                                                                                                                                                                                                                             |
-| Target to device communication on covert HID channel                            | no                                                                                                      | Raw HID device allows communication with Windows Targets (PowerShell 2.0+ present) via raw HID</br>  There's a full automated payload, allowing to access P4wnP1 bash via a custom PowerShell console from target device (see 'hid_frontdoor.txt' payload). </br> An additional payload based on this technique, allows to expose a backdoor session to P4wnP1 via HID covert channel and relaying it via WiFi/Bluetooth to any SSH capable device (bridging airgaps, payload 'hid_backdoor.txt') |
-| **Mouse emulation**                                                                 | no                                                                                                      | Supported: relative Mouse positioning (most OS, including Android) + ABSOLUTE mouse positioning (Windows); dedicated scripting language "MouseScript" to control the Mouse, MouseScripts on-demand from HID backdoor shell                                                                                                                                                                                                                                                                        |
-| Trigger payloads via target keyboard                                            | No                                                                                                      | Hardware based: LEDs for CAPSLOCK/SCROLLLOCK and NUMLOCK are read back and used to branch or trigger payloads (see ``hid_keyboard2.txt`` payload)                                                                                                                                                                                                                                                                                                                                                 |
-| Interactive DuckyScript execution                                               | Not supported                                                                                           | supported, HID backdoor could be used to fire scripts on-demand (via WiFi, Bluetooth or from Internet using the HID remote backdoor)                                                                                                                                                                                                                                                                                                                                                              |
-| USB configuration changable during runtime                                      | supported                                                                                               | will maybe be implemented                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| Support for RubberDucky payloads                                                | supported                                                                                               | supported                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| Support for piping command output to HID keyboard out                           | no                                                                                                      | supported                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| Switchable payloads                                                             | Hardware switch                                                                                         | manually in interactive mode (Hardware switch could be soldered, script support is a low priority ToDo. At least till somebody prints a housing for the Pi which has such a switch and PIN connectors)                                                                                                                                                                                                                                                                                            |
-| Interactive Login with display out                                              | SSH / serial                                                                                            | SSH / serial / stand-alone (USB OTG + HDMI)                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| Performance                                                                     | High performance ARM quad core CPU, SSD Flash                                                           | Low performance single core ARM CPU, SDCARD                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| Network interface bitrate                                                       | Windows RNDIS: **2 GBit/s**</br>Linux/MacOS ECM: **100 MBit/s**</br>Real bitrate 450 MBit max (USB 2.0) | Windows RNDIS: **20 GBit/s**</br>Linux/MacOS ECM: **4 GBit/s** (detected as 1 GBit/s interface on MacOS)</br>Real bitrate 450 MBit max (USB 2.0)</br>[Here's the needed P4wnP1 patch](https://github.com/mame82/ratepatch)                                                                                                                                                                                                                                                                        |
-| LED indicator                                                                   | RGB Led, driven by single payload command                                                               | mono color LED, driven by a single payload command                                                                                                                                                                                                                                                                                                                                                                                                                                                |
-| Customization                                                                   | Debian based OS with package manager                                                                    | Debian based OS with package manager                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| External network access via WLAN (relay attacks, MitM attacks, airgap bridging) | Not possible, no external interface                                                                     | supported with Pi Zero W                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| SSH access via **Bluetooth**                                                        | not possible                                                                                            | supported (Pi Zero W)                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| Connect to existing WiFi networks (headless)                                    | not possible                                                                                            | supported (Pi Zero W)                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| Shell **access via Internet**                                                       | not possible                                                                                            | supported (WiFi client connection + SSH remote port forwarding to SSH server owned by the pentester via AutoSSH)                                                                                                                                                                                                                                                                                                                                                                                  |
-| Ease of use                                                                     | Easy, change payloads based on USB drive, simple bash based scripting language                          | Medium, bash based event driven payloads, inline commands for HID (DuckyScript and ASCII keyboard printing, as well as LED control)                                                                                                                                                                                                                                                                                                                                                               |
-| Available payloads                                                              | Fast growing github repo (big community)                                                                |  Slowly growing github repo (spare time one man show ;-)) Edit: Growing community, but no payload contributions so far                                                                                                                                                                                                                                                                                                                                                                            |
-| In one sentence ...                                                             | "World's most advanced USB attack platform."                                                            | A open source project for the pentesting and red teaming community.                                                                                                                                                                                                                                                                                                                                                                                                                               |
-| Total Costs of Ownership                                                        | about 99 USD                                                                                            | about 5 USD (11 USD fow WLAN capability with Pi Zero W)                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-
-SumUp: BashBunny is directed to easy usage, but costs 20 times as much as the basic P4wnP1 hardware. P4wnP1 is directed to a more advanced user, but allows outbound communication on a separate network interface (routing and MitM traffic to upstream internet, hardware backdoor etc.)
 
 Install instructions
 ====================
@@ -334,9 +302,9 @@ via USB
 
 or via WiFi
 
-	pi@172.24.0.1
-	Network name: P4wnP1
-	Key: MaMe82-P4wnP1
+  pi@172.24.0.1
+  Network name: P4wnP1
+  Key: MaMe82-P4wnP1
 
 
 From there you could alter `setup.cfg` to change the current payload (`PAYLOAD` parameter) and keyboard language (`LANG` parameter).
@@ -351,26 +319,6 @@ Requirements
 -   Raspbian Jessie/Stretch Lite pre installed (kernel is updated by the P4wnP1 installer, as the current kernel has errors in the USB gadget modules, resulting in a crash)
 -   Internet connection to run the `install.sh` script
 -   the project is still work in progress, so features and new payloads are added in frequently (make sure to have an updated copy of P4wnP1 repo)
-
-Snagging creds from locked machines, vulnerable application (Oracle JAVA JRE/JDK vuln)
-======================================================================================
-
-During tests of P4wnP1 a product has been found to answer NTLM authentication requests on wpad.dat on a locked and fully patched Windows 10 machine. The NTLM hash of the logged in user is sent by a third party software, even if the machine isn’t domain joined. The flaw has been reported to the respective vendor. Details will be added to the readme as soon as a patch is available. For now I’ll recently update the disclosure timeline here.
-
-Disclosure Timeline discovered NTLM hash leak:
-
-| Date        	| Action                                       	|
-|-------------	|----------------------------------------------	|
-| Feb-23-2017 	| Initial report submitted to Oracle (Email)   	|
-| Feb-23-2017 	| Oracle reports back, investigating the issue 	|
-| Mar-01-2017 	| Oracle confirmed issue, working on fix       	|
-| Mar-23-2017 	| Oracle: monthly status Update "Being fixed in main codeline"      	|
-| Apr-23-2017   | Oracle: monthly status Update "Being fixed in main codeline"  (yes, Oracle statement doesn't change)      |
-| May-23-2017 	| Oracle: monthly status Update "Being fixed in main codeline"      	|
-| Jun-23-2017 	| Oracle: monthly status Update "Being fixed in main codeline"      	|
-| Jul-14-2017 	| Oracle: released an update and registered **CVE-2017-10125**. See [link](http://www.securityfocus.com/bid/99809)      	|
-
-So here we are now. The **vulnerable product has been the Oracle Java JRE and JDK** (1.7 Update 141 and 1.8 Update 131). The issue has been fixed with the "Oracle Critical Patch Update Advisory - July 2017", which could be found [here](http://www.oracle.com/technetwork/security-advisory/cpujul2017-3236622.html). So go and update your Java JRE/JDK.
 
 Credits to
 ==========

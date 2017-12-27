@@ -21,7 +21,7 @@
 #
 # Declares function used in conjunction with HID mouse
 
-# output mouse commands from MouseScript (see $wdir/MouseScripts/test.mouse for example Script)
+# output mouse commands from MouseScript (see $wdir/mousescripts/test.mouse for example Script)
 function outmouse()
 {
 #	cat | python $wdir/duckencoder/duckencoder.py -l $lang -r | python $wdir/transhid.py > /dev/hidg0
